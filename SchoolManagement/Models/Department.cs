@@ -8,24 +8,20 @@ using System.Threading.Tasks;
 
 namespace SchoolManagement.Models
 {
-    // [Table("Students")]
-    public class Student
+    public class Department
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required(ErrorMessage = "This field is required.")]
-        [Column(TypeName = "nvarchar(250)")]
-        [DisplayName("Full Name")]
-        public string FullName { get; set; }
+        [Column(TypeName = "nvarchar(50)")]
+        [DisplayName("Name")]
+        public string Name { get; set; }
         [Required(ErrorMessage = "This field is required.")]
         [Column(TypeName = "varchar(10)")]
-        [DisplayName("Reg. No.")]
-        public string RegistrationNo { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string Roll { get; set; }
+        [DisplayName("Code")]
+        public string Code { get; set; }
 
-        public int? DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public IEnumerable<Student> Students { get; set; }
     }
 }
