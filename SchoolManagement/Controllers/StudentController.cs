@@ -25,7 +25,7 @@ namespace SchoolManagement.Controllers
         // GET: Student List
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            return View(await _context.Students.Include(c=>c.Department).ToListAsync());
         }
 
         // GET: Student/Details/5
@@ -46,9 +46,26 @@ namespace SchoolManagement.Controllers
             return View(student);
         }
 
+        private void LoadDepartments()
+        {
+            try
+            {
+                List<Department> departments = new List<Department>();
+                departments = _context.Departments.ToList();
+                departments.Insert(0, new Department { Id = 0, Name = "Please select" });
+                ViewBag.DepartmentList = departments;
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
         // GET: Student/AddOrEdit
         public IActionResult AddOrEdit(int id = 0)
         {
+            LoadDepartments();
+
             if (id == 0)
                 return View(new Student());
 
@@ -65,7 +82,7 @@ namespace SchoolManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,FullName,RegistrationNo,Roll")] Student student)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,FullName,RegistrationNo,DepartmentId,Roll")] Student student)
         {
             if (ModelState.IsValid)
             {
